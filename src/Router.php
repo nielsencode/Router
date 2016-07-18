@@ -1,6 +1,6 @@
 <?php
 
-namespace Nielsen\Router;
+namespace Router;
 
 require_once __DIR__.'/Route.php';
 
