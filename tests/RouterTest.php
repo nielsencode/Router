@@ -3,7 +3,7 @@
 require_once __DIR__.'/../src/Router.php';
 
 use PHPUnit\Framework\TestCase;
-use Nielsen\Router\Router;
+use Router\Router;
 
 class RouterTest extends TestCase
 {

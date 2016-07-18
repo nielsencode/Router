@@ -1,6 +1,6 @@
 <?php
 
-namespace Nielsen\Router;
+namespace Router;
 
 class Route
 {
