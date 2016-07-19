@@ -48,13 +48,19 @@ class Router
     }
 
     /**
-     * Get the request method.
+     * Get the request uri.
      *
      * @return string
      */
-    public static function getMethod()
+    public static function getUri()
     {
-        return strtolower($_SERVER['REQUEST_METHOD']);
+        $uri = parse_url($_SERVER['REQUEST_URI'])['path'];
+
+        if (!preg_match('/^\//',$uri)) {
+            $uri = "/$uri";
+        }
+
+        return $uri;
     }
 
     /**
@@ -76,20 +82,25 @@ class Router
     }
 
     /**
-     * Load a uri.
+     * Get the request method.
      *
-     * @param string $uri
+     * @return string
+     */
+    public static function getMethod()
+    {
+        return strtolower($_SERVER['REQUEST_METHOD']);
+    }
+
+    /**
+     * Load the request uri.
+     *
      * @return mixed
      */
-    public static function load($uri)
+    public static function load()
     {
-        if (!preg_match('/^\/.*/',$uri)) {
-            $uri = "/$uri";
-        }
+        $uri = self::getUri();
 
-        $method = self::getMethod();
-
-        $route = self::getRoute($method,$uri);
+        $route = self::getRoute(self::getMethod(),$uri);
 
         return $route->load($route->getParameters($uri));
     }

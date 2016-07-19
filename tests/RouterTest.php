@@ -71,8 +71,10 @@ class RouterTest extends TestCase
      */
     public function testRoute($uri,$route,$method)
     {
+        $_SERVER['REQUEST_URI'] = $uri;
+
         $_SERVER['REQUEST_METHOD'] = $method;
 
-        $this->assertEquals($route,Router::load($uri));
+        $this->assertEquals($route,Router::load());
     }
 }
