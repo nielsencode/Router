@@ -72,7 +72,7 @@ class Router
             }
         }
 
-        throw new Exception("\"$uri\" did not match any routes.");
+        throw new \Exception("\"$uri\" did not match any routes.");
     }
 
     /**
