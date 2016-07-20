@@ -31,7 +31,7 @@ class Route
 
         $replaced = preg_replace('/\\\{[^\}]+\\\}/','([^\/]+)',$quoted);
 
-        return "/$replaced/";
+        return "/^$replaced$/";
     }
 
     /**

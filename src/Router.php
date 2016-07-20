@@ -44,7 +44,7 @@ class Router
      */
     public static function register($method,$route,$callback)
     {
-        array_unshift(self::$routes,new Route($method,$route,$callback));
+        self::$routes[] = new Route($method,$route,$callback);
     }
 
     /**
