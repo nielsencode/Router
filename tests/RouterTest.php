@@ -28,6 +28,10 @@ class RouterTest extends TestCase
         Router::get('/rocks/{id}/type',function($id) {
             return '/rocks/{id}/type';
         });
+
+        Router::get('/',function() {
+            return 'api/';
+        },['subdomain'=>'api']);
     }
 
     public function RouteProvider()
@@ -62,6 +66,12 @@ class RouterTest extends TestCase
                 'uri' => '/rocks/1/type',
                 'route' => '/rocks/{id}/type',
                 'method' => 'GET'
+            ],
+            [
+                'uri' => '/',
+                'route' => 'api/',
+                'method' => 'get',
+                'domain' => 'api'
             ]
         ];
     }
@@ -69,8 +79,10 @@ class RouterTest extends TestCase
     /**
      * @dataProvider RouteProvider
      */
-    public function testRoute($uri,$route,$method)
+    public function testRoute($uri,$route,$method,$domain=null)
     {
+        $_SERVER['HTTP_HOST'] = $domain;
+
         $_SERVER['REQUEST_URI'] = $uri;
 
         $_SERVER['REQUEST_METHOD'] = $method;

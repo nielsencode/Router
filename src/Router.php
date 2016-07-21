@@ -18,10 +18,11 @@ class Router
      *
      * @param string $route
      * @param callable $callback
+     * @param array $options
      */
-    public static function get($route,$callback)
+    public static function get($route,$callback,$options=[])
     {
-        self::register('get',$route,$callback);
+        self::register('get',$route,$callback,$options);
     }
 
     /**
@@ -29,10 +30,11 @@ class Router
      *
      * @param string $route
      * @param callable $callback
+     * @param array $options
      */
-    public static function post($route,$callback)
+    public static function post($route,$callback,$options=[])
     {
-        self::register('post',$route,$callback);
+        self::register('post',$route,$callback,$options);
     }
 
     /**
@@ -41,10 +43,11 @@ class Router
      * @param string $method
      * @param string $route
      * @param callable $callback
+     * @param array $options
      */
-    public static function register($method,$route,$callback)
+    public static function register($method,$route,$callback,$options)
     {
-        self::$routes[] = new Route($method,$route,$callback);
+        self::$routes[] = new Route($method,$route,$callback,$options);
     }
 
     /**
@@ -103,5 +106,15 @@ class Router
         $route = self::getRoute(self::getMethod(),$uri);
 
         return $route->load($route->getParameters($uri));
+    }
+
+    /**
+     * Get the subdomain for the current url.
+     *
+     * @return string
+     */
+    public static function getSubdomain()
+    {
+        return preg_replace('/\.?'.getenv('DOMAIN').'/','',$_SERVER['HTTP_HOST']);
     }
 }

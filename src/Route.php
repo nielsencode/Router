@@ -11,13 +11,37 @@ class Route
      * @param string $route
      * @param callable $callback
      */
-    public function __construct($method,$route,$callback)
+    public function __construct($method,$route,$callback,$options)
     {
         $this->method = $method;
 
         $this->route = $route;
 
         $this->callback = $callback;
+
+        $this->setOptions($options);
+    }
+
+    /**
+     * Get the option defaults.
+     *
+     * @return array
+     */
+    public function getOptionDefaults()
+    {
+        return [
+            'subdomain' => null
+        ];
+    }
+
+    /**
+     * Set the options.
+     *
+     * @param array $options
+     */
+    public function setOptions($options)
+    {
+        $this->options = array_merge($this->getOptionDefaults(),$options);
     }
 
     /**
@@ -35,6 +59,17 @@ class Route
     }
 
     /**
+     * Return whether or not the route options match a uri.
+     *
+     * @param string $uri
+     * @return bool
+     */
+    public function optionsMatch($uri)
+    {
+        return $this->options['subdomain'] == Router::getSubdomain();
+    }
+
+    /**
      * Return whether or not the route matches a method & uri combination.
      *
      * @param string $method
@@ -48,6 +83,10 @@ class Route
         }
 
         if (!preg_match($this->getPattern(),$uri)) {
+            return false;
+        }
+
+        if (!$this->optionsMatch($uri)) {
             return false;
         }
 
