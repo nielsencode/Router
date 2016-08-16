@@ -9,69 +9,57 @@ class RouterTest extends TestCase
 {
     public static function setUpBeforeClass()
     {
+        Router::config(['domain'=>'router']);
+
         Router::get('/',function() {
             return '/';
         });
 
-        Router::get('/rocks',function() {
-            return '/rocks';
+        Router::get('/gems',function() {
+            return '/gems';
         });
 
-        Router::post('/rocks',function() {
-            return '/rocks';
+        Router::get('/gems/{id}',function($id) {
+            return "/gems/$id";
         });
-
-        Router::get('/rocks/{id}',function($id) {
-            return '/rocks/{id}';
-        });
-
-        Router::get('/rocks/{id}/type',function($id) {
-            return '/rocks/{id}/type';
-        });
-
+        
         Router::get('/',function() {
-            return 'api/';
-        },['subdomain'=>'api']);
+            return 'subdomain';
+        },['subdomain'=>'subdomain']);
     }
 
     public function RouteProvider()
     {
         return [
             [
-                'uri' => '/',
-                'route' => '/',
-                'method' => 'GET'
-            ],
-            [
-                'uri' => '',
-                'route' => '/',
-                'method' => 'GET'
-            ],
-            [
-                'uri' => '/rocks',
-                'route' => '/rocks',
-                'method' => 'GET'
-            ],
-            [
-                'uri' => '/rocks',
-                'route' => '/rocks',
-                'method' => 'POST'
-            ],
-            [
-                'uri' => '/rocks/1',
-                'route' => '/rocks/{id}',
-                'method' => 'GET'
-            ],
-            [
-                'uri' => '/rocks/1/type',
-                'route' => '/rocks/{id}/type',
-                'method' => 'GET'
-            ],
-            [
-                'uri' => '/',
-                'route' => 'api/',
+                'domain' => 'router',
                 'method' => 'get',
-                'domain' => 'api'
+                'uri' => '/',
+                'expected' => '/'
+            ],
+            [
+                'domain' => 'router',
+                'method' => 'get',
+                'uri' => '',
+                'expected' => '/'
+            ],
+            [
+                'domain' => 'router',
+                'method' => 'get',
+                'uri' => '/gems',
+                'expected' => '/gems'
+            ],
+            [
+                'domain' => 'router',
+                'method' => 'get',
+                'uri' => '/gems/1',
+                'expected' => '/gems/1'
+            ],
+            [
+                'domain' => 'subdomain.router',
+                'method' => 'get',
+                'uri' => '/',
+                'expected' => 'subdomain'
             ]
         ];
     }
@@ -79,14 +67,14 @@ class RouterTest extends TestCase
     /**
      * @dataProvider RouteProvider
      */
-    public function testRoute($uri,$route,$method,$domain=null)
+    public function testRoute($domain,$method,$uri,$expected)
     {
         $_SERVER['HTTP_HOST'] = $domain;
 
-        $_SERVER['REQUEST_URI'] = $uri;
-
         $_SERVER['REQUEST_METHOD'] = $method;
 
-        $this->assertEquals($route,Router::load());
+        $_SERVER['REQUEST_URI'] = $uri;
+
+        $this->assertEquals($expected,Router::load());
     }
 }

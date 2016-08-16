@@ -6,6 +6,8 @@ require_once __DIR__.'/Route.php';
 
 class Router
 {
+    public static $configs;
+
     /**
      * The registered routes.
      *
@@ -13,12 +15,17 @@ class Router
      */
     public static $routes = [];
 
+    public static function config($configs)
+    {
+        self::$configs = $configs;
+    }
+
     /**
      * Register a route that responds to the GET method.
      *
      * @param string $route
      * @param callable $callback
-     * @param array $options
+     * @param array $options ['subdomain']
      */
     public static function get($route,$callback,$options=[])
     {
@@ -115,6 +122,6 @@ class Router
      */
     public static function getSubdomain()
     {
-        return preg_replace('/\.?'.getenv('DOMAIN').'/','',$_SERVER['HTTP_HOST']);
+        return preg_replace('/\.?'.self::$configs['domain'].'/','',$_SERVER['HTTP_HOST']);
     }
 }
