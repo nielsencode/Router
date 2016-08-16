@@ -6,6 +6,11 @@ require_once __DIR__.'/Route.php';
 
 class Router
 {
+    /**
+     * The configuration values.
+     *
+     * @var array
+     */
     public static $configs;
 
     /**
@@ -15,6 +20,11 @@ class Router
      */
     public static $routes = [];
 
+    /**
+     * Set configuration values for the router.
+     *
+     * @param array $configs ['domain']
+     */
     public static function config($configs)
     {
         self::$configs = $configs;
