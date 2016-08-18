@@ -2,6 +2,7 @@
 
 namespace Router;
 
+require_once __DIR__.'/RouterException.php';
 require_once __DIR__.'/Route.php';
 
 class Router
@@ -11,7 +12,7 @@ class Router
      *
      * @var array
      */
-    public static $configs;
+    public static $configs = [];
 
     /**
      * The registered routes.
@@ -28,6 +29,22 @@ class Router
     public static function config($configs)
     {
         self::$configs = $configs;
+    }
+
+    /**
+     * Get a configuration value.
+     *
+     * @param string $config
+     * @return mixed
+     * @throws RouterException
+     */
+    public static function getConfig($config)
+    {
+        if (!isset(self::$configs[$config])) {
+            throw new RouterException("Config value \"$config\" is undefined.");
+        }
+
+        return self::$configs[$config];
     }
 
     /**
@@ -132,6 +149,6 @@ class Router
      */
     public static function getSubdomain()
     {
-        return preg_replace('/\.?'.self::$configs['domain'].'/','',$_SERVER['HTTP_HOST']);
+        return preg_replace('/\.?'.self::getConfig('domain').'/','',$_SERVER['HTTP_HOST']);
     }
 }
