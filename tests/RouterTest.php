@@ -9,6 +9,8 @@ class RouterTest extends TestCase
 {
     public static function setUpBeforeClass()
     {
+        Router::config(['domain'=>'router']);
+
         Router::get('/',function() {
             return '/';
         });
@@ -21,7 +23,7 @@ class RouterTest extends TestCase
             return "/gems/$id";
         });
         
-        Router::get('/',['domain'=>'subdomain',function() {
+        Router::get('/',['domain'=>'subdomain.router',function() {
             return 'subdomain';
         }]);
     }
@@ -53,7 +55,7 @@ class RouterTest extends TestCase
                 'method' => 'get',
                 'uri' => '/',
                 'expected' => 'subdomain',
-                'domain' => 'subdomain'
+                'domain' => 'subdomain.router'
             ]
         ];
     }
@@ -61,7 +63,7 @@ class RouterTest extends TestCase
     /**
      * @dataProvider RouteProvider
      */
-    public function testRoute($method,$uri,$expected,$domain=null)
+    public function testRoute($method,$uri,$expected,$domain='router')
     {
         $_SERVER['HTTP_HOST'] = $domain;
 

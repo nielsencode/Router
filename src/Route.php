@@ -36,7 +36,7 @@ class Route
     public function getOptionDefaults()
     {
         return [
-            'domain' => Router::getDomain()
+            'domain' => Router::getConfig('domain')
         ];
     }
 
@@ -72,7 +72,11 @@ class Route
      */
     public function optionsMatch($uri)
     {
-        return $this->options['domain'] == Router::getDomain();
+        if ($this->options['domain'] != Router::getDomain()) {
+            return false;
+        }
+
+        return true;
     }
 
     /**

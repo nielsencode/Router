@@ -8,11 +8,44 @@ require_once __DIR__.'/Route.php';
 class Router
 {
     /**
+     * The configs.
+     *
+     * @var array
+     */
+    public static $configs = [];
+
+    /**
      * The registered routes.
      *
      * @var array
      */
     public static $routes = [];
+
+    /**
+     * Set configuration values.
+     *
+     * @param array $configs ['domain'=>string]
+     */
+    public static function config($configs)
+    {
+        self::$configs = $configs;
+    }
+
+    /**
+     * Get a configuration value.
+     *
+     * @param string $config
+     * @return mixed
+     * @throws RouterException
+     */
+    public static function getConfig($config)
+    {
+        if (!isset(self::$configs[$config])) {
+            throw new RouterException("Config \"$config\" is undefined.");
+        }
+
+        return self::$configs[$config];
+    }
 
     /**
      * Register a route that responds to the GET method.
