@@ -8,13 +8,6 @@ require_once __DIR__.'/Route.php';
 class Router
 {
     /**
-     * The configuration values.
-     *
-     * @var array
-     */
-    public static $configs = [];
-
-    /**
      * The registered routes.
      *
      * @var array
@@ -22,53 +15,25 @@ class Router
     public static $routes = [];
 
     /**
-     * Set configuration values for the router.
-     *
-     * @param array $configs ['domain']
-     */
-    public static function config($configs)
-    {
-        self::$configs = $configs;
-    }
-
-    /**
-     * Get a configuration value.
-     *
-     * @param string $config
-     * @return mixed
-     * @throws RouterException
-     */
-    public static function getConfig($config)
-    {
-        if (!isset(self::$configs[$config])) {
-            throw new RouterException("Config value \"$config\" is undefined.");
-        }
-
-        return self::$configs[$config];
-    }
-
-    /**
      * Register a route that responds to the GET method.
      *
      * @param string $route
-     * @param callable $callback
-     * @param array $options ['subdomain']
+     * @param callable|array $callback
      */
-    public static function get($route,$callback,$options=[])
+    public static function get($route,$callback)
     {
-        self::register('get',$route,$callback,$options);
+        self::register('get',$route,$callback);
     }
 
     /**
      * Register a route that responds to the POST method.
      *
      * @param string $route
-     * @param callable $callback
-     * @param array $options
+     * @param callable|array $callback
      */
-    public static function post($route,$callback,$options=[])
+    public static function post($route,$callback)
     {
-        self::register('post',$route,$callback,$options);
+        self::register('post',$route,$callback);
     }
 
     /**
@@ -76,12 +41,11 @@ class Router
      *
      * @param string $method
      * @param string $route
-     * @param callable $callback
-     * @param array $options
+     * @param callable|array $callback
      */
-    public static function register($method,$route,$callback,$options)
+    public static function register($method,$route,$callback)
     {
-        self::$routes[] = new Route($method,$route,$callback,$options);
+        self::$routes[] = new Route($method,$route,$callback);
     }
 
     /**
@@ -129,6 +93,16 @@ class Router
     }
 
     /**
+     * Get the domain for the current url.
+     *
+     * @return string
+     */
+    public static function getDomain()
+    {
+        return $_SERVER['HTTP_HOST'];
+    }
+
+    /**
      * Load the request uri.
      *
      * @return mixed
@@ -140,15 +114,5 @@ class Router
         $route = self::getRoute(self::getMethod(),$uri);
 
         return $route->load($route->getParameters($uri));
-    }
-
-    /**
-     * Get the subdomain for the current url.
-     *
-     * @return string
-     */
-    public static function getSubdomain()
-    {
-        return preg_replace('/\.?'.self::getConfig('domain').'/','',$_SERVER['HTTP_HOST']);
     }
 }

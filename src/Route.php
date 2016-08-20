@@ -9,17 +9,23 @@ class Route
      *
      * @param string $method
      * @param string $route
-     * @param callable $callback
+     * @param callable|array $callback
      */
-    public function __construct($method,$route,$callback,$options)
+    public function __construct($method,$route,$callback)
     {
         $this->method = $method;
 
         $this->route = $route;
 
-        $this->callback = $callback;
+        if (is_array($callback)) {
+            $this->callback = array_pop($callback);
 
-        $this->setOptions($options);
+            $this->setOptions($callback);
+        } else {
+            $this->callback = $callback;
+
+            $this->setOptions([]);
+        }
     }
 
     /**
@@ -30,7 +36,7 @@ class Route
     public function getOptionDefaults()
     {
         return [
-            'subdomain' => null
+            'domain' => Router::getDomain()
         ];
     }
 
@@ -66,7 +72,7 @@ class Route
      */
     public function optionsMatch($uri)
     {
-        return $this->options['subdomain'] == Router::getSubdomain();
+        return $this->options['domain'] == Router::getDomain();
     }
 
     /**
