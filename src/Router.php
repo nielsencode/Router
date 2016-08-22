@@ -90,6 +90,8 @@ class Router
     {
         $uri = parse_url($_SERVER['REQUEST_URI'])['path'];
 
+        $uri = preg_replace('/(.+)\/$/','$1',$uri);
+
         if (!preg_match('/^\//',$uri)) {
             $uri = "/$uri";
         }
