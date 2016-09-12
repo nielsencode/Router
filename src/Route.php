@@ -5,7 +5,7 @@ namespace Router;
 class Route
 {
     /**
-     * Construct a new route.
+     * Create a new Route instance.
      *
      * @param string $method
      * @param string $route
@@ -33,10 +33,10 @@ class Route
      *
      * @return array
      */
-    public function getOptionDefaults()
+    protected function getOptionDefaults()
     {
         return [
-            'domain' => Router::getConfig('domain')
+            'domain' => null
         ];
     }
 
@@ -45,7 +45,7 @@ class Route
      *
      * @param array $options
      */
-    public function setOptions($options)
+    protected function setOptions($options)
     {
         $this->options = array_merge($this->getOptionDefaults(),$options);
     }
@@ -65,28 +65,25 @@ class Route
     }
 
     /**
-     * Return whether or not the route options match a uri.
+     * Return whether or not the route matches a set of options.
      *
-     * @param string $uri
+     * @param array $options
      * @return bool
      */
-    public function optionsMatch($uri)
+    public function optionsMatch($options)
     {
-        if ($this->options['domain'] != Router::getDomain()) {
-            return false;
-        }
-
-        return true;
+        return empty(array_diff_assoc($this->options,$options));
     }
 
     /**
-     * Return whether or not the route matches a method & uri combination.
+     * Return whether or not the route matches the given parameters.
      *
      * @param string $method
      * @param string $uri
+     * @param array $options
      * @return bool
      */
-    public function matches($method,$uri)
+    public function matches($method,$uri,$options)
     {
         if ($this->method != $method) {
             return false;
@@ -96,7 +93,7 @@ class Route
             return false;
         }
 
-        if (!$this->optionsMatch($uri)) {
+        if (!$this->optionsMatch($options)) {
             return false;
         }
 

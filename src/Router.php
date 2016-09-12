@@ -12,23 +12,23 @@ class Router
      *
      * @var array
      */
-    public static $configs = [];
+    protected $configs = [];
 
     /**
      * The registered routes.
      *
      * @var array
      */
-    public static $routes = [];
+    protected $routes = [];
 
     /**
-     * Set configuration values.
+     * Create a new Router instance.
      *
      * @param array $configs ['domain'=>string]
      */
-    public static function config($configs)
+    public function __construct($configs)
     {
-        self::$configs = $configs;
+        $this->configs = $configs;
     }
 
     /**
@@ -38,13 +38,13 @@ class Router
      * @return mixed
      * @throws RouterException
      */
-    public static function getConfig($config)
+    public function getConfig($name)
     {
-        if (!isset(self::$configs[$config])) {
-            throw new RouterException("Config \"$config\" is undefined.");
+        if (!isset($this->configs[$name])) {
+            throw new RouterException("Config \"$name\" is undefined.");
         }
 
-        return self::$configs[$config];
+        return $this->configs[$name];
     }
 
     /**
@@ -53,9 +53,9 @@ class Router
      * @param string $route
      * @param callable|array $callback
      */
-    public static function get($route,$callback)
+    public function get($route,$callback)
     {
-        self::register('get',$route,$callback);
+        $this->register('get',$route,$callback);
     }
 
     /**
@@ -64,9 +64,9 @@ class Router
      * @param string $route
      * @param callable|array $callback
      */
-    public static function post($route,$callback)
+    public function post($route,$callback)
     {
-        self::register('post',$route,$callback);
+        $this->register('post',$route,$callback);
     }
 
     /**
@@ -76,9 +76,9 @@ class Router
      * @param string $route
      * @param callable|array $callback
      */
-    public static function register($method,$route,$callback)
+    public function register($method,$route,$callback)
     {
-        self::$routes[] = new Route($method,$route,$callback);
+        $this->routes[] = new Route($method,$route,$callback);
     }
 
     /**
@@ -99,6 +99,15 @@ class Router
         return $uri;
     }
 
+    public function getRouteOptions()
+    {
+        return [
+            'domain' => $this->getDomain() == $this->getConfig('domain')
+                ? null
+                : $this->getDomain()
+        ];
+    }
+
     /**
      * Get a route.
      *
@@ -106,10 +115,10 @@ class Router
      * @param string $uri
      * @return Route
      */
-    public static function getRoute($method,$uri)
+    public function getRoute($method,$uri)
     {
-        foreach (self::$routes as $route) {
-            if ($route->matches($method,$uri)) {
+        foreach ($this->routes as $route) {
+            if ($route->matches($method,$uri,$this->getRouteOptions())) {
                 return $route;
             }
         }
@@ -142,11 +151,11 @@ class Router
      *
      * @return mixed
      */
-    public static function load()
+    public function load()
     {
-        $uri = self::getUri();
+        $uri = $this->getUri();
 
-        $route = self::getRoute(self::getMethod(),$uri);
+        $route = $this->getRoute($this->getMethod(),$uri);
 
         return $route->load($route->getParameters($uri));
     }

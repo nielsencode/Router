@@ -7,23 +7,27 @@ use Router\Router;
 
 class RouterTest extends TestCase
 {
+    public static $router;
+
     public static function setUpBeforeClass()
     {
-        Router::config(['domain'=>'router']);
+        $router = new Router(['domain'=>'router']);
 
-        Router::get('/',function() {
+        self::$router = $router;
+
+        $router->get('/',function() {
             return '/';
         });
 
-        Router::get('/gems',function() {
+        $router->get('/gems',function() {
             return '/gems';
         });
 
-        Router::get('/gems/{id}',function($id) {
+        $router->get('/gems/{id}',function($id) {
             return "/gems/$id";
         });
-        
-        Router::get('/',['domain'=>'subdomain.router',function() {
+
+        $router->get('/',['domain'=>'subdomain.router',function() {
             return 'subdomain';
         }]);
     }
@@ -71,6 +75,6 @@ class RouterTest extends TestCase
 
         $_SERVER['REQUEST_URI'] = $uri;
 
-        $this->assertEquals($expected,Router::load());
+        $this->assertEquals($expected,self::$router->load());
     }
 }
