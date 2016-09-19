@@ -34,7 +34,7 @@ class Router
     /**
      * Get a configuration value.
      *
-     * @param string $config
+     * @param string $name
      * @return mixed
      * @throws RouterException
      */
