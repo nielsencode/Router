@@ -104,7 +104,8 @@ class Router
      *
      * @param string $method
      * @param string $uri
-     * @return Route
+     * @return mixed
+     * @throws \Exception
      */
     public static function getRoute($method,$uri)
     {
@@ -114,7 +115,7 @@ class Router
             }
         }
 
-        throw new \Exception("\"$uri\" did not match any routes.");
+        throw new \Exception("\"$uri\" did not match any routes for method \"$method\".");
     }
 
     /**
