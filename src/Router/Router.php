@@ -1,5 +1,5 @@
 <?php
-namespace Components\Router\Router;
+namespace Components\Router;
 
 require_once __DIR__.'/Route.php';
 

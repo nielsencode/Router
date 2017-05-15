@@ -2,7 +2,7 @@
     "name": "components/router",
     "autoload": {
         "psr-4": {
-            "Components\\Router\\": "src/"
+            "Components\\Router\\": "src/Router/"
         }
     }
 }

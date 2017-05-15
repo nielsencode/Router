@@ -2,7 +2,7 @@
 
 require_once __DIR__.'/../src/Router/Router.php';
 
-use Components\Router\Router\Router;
+use Components\Router\Router;
 
 class RouterTest extends PHPUnit\Framework\TestCase
 {
