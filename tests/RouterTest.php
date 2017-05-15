@@ -2,13 +2,15 @@
 
 require_once __DIR__.'/../src/Router/Router.php';
 
-use Router\Router\Router;
+use Components\Router\Router\Router;
 
 class RouterTest extends PHPUnit\Framework\TestCase
 {
     public function setUp()
     {
         $router = new Router;
+
+        $router->get('/',function() {});
 
         $router->get('test',function() {
             echo 'This is a test.';

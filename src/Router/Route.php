@@ -16,7 +16,7 @@ class Route
 
     protected function getPatternFromUri()
     {
-        return '#'.preg_replace('#\{[^\}]+\}#','([^/]+)',$this->uri).'#';
+        return '#^'.preg_replace('#\{[^\}]+\}#','([^/]+)',$this->uri).'$#';
     }
 
     public function matchesUri($uri)
