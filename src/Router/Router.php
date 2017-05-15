@@ -43,7 +43,7 @@ class Router
         $uri = $_SERVER['REQUEST_URI'];
 
         if (!$route = $this->findRoute($method,$uri)) {
-            throw new Exception("No route defined for \"$uri\".");
+            throw new \Exception("No route defined for \"$uri\".");
         }
 
         $parameters = $route->getParameters($uri);
