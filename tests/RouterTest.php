@@ -1,80 +1,55 @@
 <?php
 
-require_once __DIR__.'/../src/Router.php';
+require_once __DIR__.'/../src/Router/Router.php';
 
-use PHPUnit\Framework\TestCase;
-use Router\Router;
+use Router\Router\Router;
 
-class RouterTest extends TestCase
+class RouterTest extends PHPUnit\Framework\TestCase
 {
-    public static $router;
-
-    public static function setUpBeforeClass()
+    public function setUp()
     {
-        $router = new Router(['domain'=>'router']);
+        $router = new Router;
 
-        self::$router = $router;
-
-        $router->get('/',function() {
-            return '/';
+        $router->get('test',function() {
+            echo 'This is a test.';
         });
 
-        $router->get('/gems',function() {
-            return '/gems';
+        $router->post('test/{id}',function($id) {
+            echo "This is post test $id.";
         });
 
-        $router->get('/gems/{id}',function($id) {
-            return "/gems/$id";
-        });
-
-        $router->get('/',['domain'=>'subdomain.router',function() {
-            return 'subdomain';
-        }]);
+        $this->router = $router;
     }
 
-    public function RouteProvider()
+    public function routerProvider()
     {
         return [
             [
-                'method' => 'get',
-                'uri' => '/',
-                'expected' => '/'
+                'GET',
+                'test',
+                'This is a test.'
             ],
             [
-                'method' => 'get',
-                'uri' => '',
-                'expected' => '/'
-            ],
-            [
-                'method' => 'get',
-                'uri' => '/gems',
-                'expected' => '/gems'
-            ],
-            [
-                'method' => 'get',
-                'uri' => '/gems/1',
-                'expected' => '/gems/1'
-            ],
-            [
-                'method' => 'get',
-                'uri' => '/',
-                'expected' => 'subdomain',
-                'domain' => 'subdomain.router'
+                'POST',
+                'test/1',
+                'This is post test 1.'
             ]
         ];
     }
 
     /**
-     * @dataProvider RouteProvider
+     * @dataProvider routerProvider
      */
-    public function testRoute($method,$uri,$expected,$domain='router')
+    public function testRouter($method,$route,$result)
     {
-        $_SERVER['HTTP_HOST'] = $domain;
-
         $_SERVER['REQUEST_METHOD'] = $method;
 
-        $_SERVER['REQUEST_URI'] = $uri;
+        $_SERVER['REQUEST_URI'] = $route;
 
-        $this->assertEquals($expected,self::$router->load());
+        ob_start();
+
+        $this->router->run();
+
+        $this->assertEquals($result,ob_get_clean());
     }
 }
