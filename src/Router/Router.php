@@ -40,7 +40,7 @@ class Router
     {
         $method = strtolower($_SERVER['REQUEST_METHOD']);
 
-        $uri = $_SERVER['REQUEST_URI'];
+        $uri = parse_url($_SERVER['REQUEST_URI'],PHP_URL_PATH);
 
         if (!$route = $this->findRoute($method,$uri)) {
             throw new \Exception("No route defined for \"$uri\".");
